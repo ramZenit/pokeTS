@@ -8,7 +8,7 @@ export function cleanInput(input: string): string[] {
     .filter((word) => word !== "");
 }
 
-export function startREPL(state: State) {
+export async function startREPL(state: State) {
   state.readline.prompt();
 
   state.readline.on("line", async (input) => {
@@ -19,6 +19,7 @@ export function startREPL(state: State) {
     }
 
     const commandName = words[0];
+    const args = words.slice(1);
 
     const command = state.commands[commandName];
     if (!command) {
@@ -27,9 +28,11 @@ export function startREPL(state: State) {
     }
 
     try {
-      command.callback(state);
+      await command.callback(state, ...args);
     } catch (error) {
-      console.log(`Error executing command '${commandName}': ${error}`);
+      console.log(
+        `Error executing command '${commandName}': ${(error as Error).message}`
+      );
     }
 
     state.readline.prompt();
