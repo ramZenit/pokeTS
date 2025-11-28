@@ -17,6 +17,7 @@ export async function commandCatch(state: State, ...args: string[]) {
     ).toFixed(3)}   `
   );
   if (catchSuccess) {
+    state.pokedex[pokemon.name] = pokemon;
     console.log(`Congratulations! You caught a ${pokemon.name}!`);
   } else {
     console.log(`${pokemonName} escaped!`);
